@@ -1,23 +1,21 @@
-import logo from './logo.svg';
-import './App.css';
+// import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
+// bootstrap css
+import "bootstrap/dist/css/bootstrap.min.css";
+import 'react-loading-skeleton/dist/skeleton.css'
+import './App.css';
+import Header from "./components/common_components/Header";
+import Footer from "./components/common_components/Footer";
+import NoteList from "./components/NoteList"
+import 'font-awesome/css/font-awesome.min.css';
+import "react-datepicker/dist/react-datepicker.css";
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div >
+     <Header/>
+     <NoteList/>
+     <Footer/>
     </div>
   );
 }
