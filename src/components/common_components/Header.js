@@ -7,8 +7,8 @@ const Header = () => {
       
       <NavbarBrand className='text-white m-auto'>
      
-      <img src="https://static.thenounproject.com/png/3241394-200.png" style={{width:90}} />
-      <span>Notes App</span>  
+      <img src="https://static.thenounproject.com/png/3241394-200.png" style={{width:90}} alt="no icon available"/>
+      <span><b>Notes App </b></span>   
       </NavbarBrand>
     </Navbar>
   )

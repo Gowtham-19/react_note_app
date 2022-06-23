@@ -3,7 +3,7 @@ import api_settings from "../settings/api_settings";
 import { useStateWithCallbackLazy } from 'use-state-with-callback';
 import http from "../interceptor";
 import NoteCard from './NoteCard';
-import { Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, Card, CardHeader, CardBody, CardFooter, Label } from "reactstrap"
+import { Row, Col, Button, Modal,ModalHeader, ModalBody, ModalFooter, Input, Card, CardHeader, CardBody, CardFooter } from "reactstrap"
 import Skeleton from 'react-loading-skeleton';
 import { ToastContainer, toast } from 'react-toastify';
 import DatePicker from "react-datepicker";
@@ -32,10 +32,8 @@ const NoteList = () => {
 
   //initial page load api call
   useEffect(() => {
-    // console.log("use effect fired")
     getNotes()
-    // console.log("api called")
-  }, [1]);
+  }, []);
 
   /**apis part */
   const getNotes = async () => {
@@ -122,29 +120,29 @@ const NoteList = () => {
       let body={
         // filter_type
       }
-      if(filter_type_val == "specific_day"){
+      if(filter_type_val === "specific_day"){
         body={
           filter_type:"specific_day",
           date:date.getDate(),
           month:date.getMonth()+1,
           year:date.getFullYear()
         }
-      }else if(filter_type_val == "specific_month"){
+      }else if(filter_type_val === "specific_month"){
         body={
           filter_type:"specific_month",
           month:date.getMonth()+1,
           year:date.getFullYear()
         }
-      }else if(filter_type_val == "specific_year"){
+      }else if(filter_type_val === "specific_year"){
         body={
           filter_type:"specific_year",
           year:date.getFullYear()
         }
-      }else if(filter_type_val == "last_week"){
+      }else if(filter_type_val === "last_week"){
         body={
           filter_type:"last_week"
         }
-      }else if(filter_type_val=="display_all"){
+      }else if(filter_type_val==="display_all"){
         body={
           filter_type:"get_all_notes"
         }
@@ -186,7 +184,7 @@ const NoteList = () => {
         </Col>
         <Col md={3}>
           {
-            (filtertype == "specific_day") ? (
+            (filtertype === "specific_day") ? (
               <>
               <label><b>Select Specific Day</b></label>
               <DatePicker
@@ -195,11 +193,11 @@ const NoteList = () => {
                 onChange={(date) => setFilter(date,undefined)}
                 minDate={min_date}
                 maxDate={max_date}
-                dateFormat="dd/MM/yyyy" disabled={filtertype == "display_all"}
+                dateFormat="dd/MM/yyyy" disabled={filtertype === "display_all"}
               />
               </>
             ) : (
-              (filtertype == "specific_month") ? (
+              (filtertype === "specific_month") ? (
                 <>
                 <label><b>Select Specific Month</b></label>
                 <DatePicker
@@ -209,10 +207,10 @@ const NoteList = () => {
                   onChange={(date) => setFilter(date,undefined)}
                   minDate={min_date}
                   maxDate={max_date}
-                  dateFormat="MMMM" disabled={filtertype == "display_all"} />
+                  dateFormat="MMMM" disabled={filtertype === "display_all"} />
                 </>
               ) : (
-                (filtertype == "specific_year") ? (
+                (filtertype === "specific_year") ? (
                   <>
                   <label><b>Select Specific Year</b></label>
                   <DatePicker
@@ -222,7 +220,7 @@ const NoteList = () => {
                     onChange={(date) => setFilter(date,undefined)}
                     minDate={min_date}
                     maxDate={max_date}
-                    dateFormat="yyyy" disabled={filtertype == "display_all"} />
+                    dateFormat="yyyy" disabled={filtertype === "display_all"} />
                   </>
                 ) : (<div></div>)
               )
@@ -239,7 +237,9 @@ const NoteList = () => {
       <Modal isOpen={addnote} backdrop="static" style={{ "color": "black" }}>
         <ModalHeader toggle={() => {
           setAddNote(false)
-        }}>Add Note</ModalHeader>
+        }}>
+          <span style={{"color":"green"}}>Add Note</span>
+          </ModalHeader>
         <ModalBody>
           <div className='form-group mb-3'>
             <Row>
@@ -278,7 +278,7 @@ const NoteList = () => {
           </div>
         </ModalBody>
         <ModalFooter>
-          <Button color="primary" onClick={addNote} disabled={noteData.category && noteData.subject && noteData.subject.length <= 25 && noteData.content && noteData.content.length <= 160 ? false : true}>Submit</Button>
+          <Button color="success" onClick={addNote} disabled={noteData.category && noteData.subject && noteData.subject.length <= 25 && noteData.content && noteData.content.length <= 160 ? false : true}>Submit</Button>
           <Button color="secondary" onClick={resetForm}>Close</Button>
         </ModalFooter>
       </Modal>

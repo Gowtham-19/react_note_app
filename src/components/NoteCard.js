@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 import { useStateWithCallbackLazy } from 'use-state-with-callback';
 import api_settings from "../settings/api_settings";
-import { Card, CardBody, CardHeader, CardFooter, CardText, CardTitle, Button,Modal,ModalFooter,ModalHeader,ModalBody,Row,Col,Input } from "reactstrap"
+import { Card, CardBody, CardHeader, CardFooter, CardTitle, Button,Modal,ModalFooter,ModalHeader,ModalBody,Row,Col,Input } from "reactstrap"
 import { ToastContainer, toast } from 'react-toastify';
 import http from "../interceptor";
 const NoteCard = ({ note,get_notes_data,delete_note_data }) => {
   const note_types = ["personal", "professional", "unimportant"]
   const [addnote, setAddNote] = useState(false);
+  const[deletepopup,setDeletePopup] = useState(false);
   const [noteData, setNoteData] = useStateWithCallbackLazy({
     id: "",
     category: "",
@@ -52,10 +53,6 @@ const NoteCard = ({ note,get_notes_data,delete_note_data }) => {
       setAddNote(true)
     })
   }
-  // useEffect(()=>{
-  //   //call function when something change in state
-  //   setAddNote(true)
-  // },[noteData]) //dependency added
   return (
     <>
     <Card className='card-body'>
@@ -72,14 +69,16 @@ const NoteCard = ({ note,get_notes_data,delete_note_data }) => {
       </CardBody>
       <CardFooter className='d-flex justify-content-end'>
         <Button color="primary" onClick={editNoteData}>Edit</Button>&nbsp;&nbsp;&nbsp;
-        <Button color='danger' onClick={deleteData}>Delete</Button>
+        <Button color='danger' onClick={() => {setDeletePopup(true)}}>Delete</Button>
       </CardFooter>
     </Card>
     <ToastContainer position='top-center' theme="colored"/>
       <Modal isOpen={addnote} backdrop="static" style={{ "color": "black" }}>
         <ModalHeader toggle={() => {
           setAddNote(false)
-        }}>Edit Note</ModalHeader>
+        }}>
+          <span style={{"color":"blue"}}>Edit Note</span>
+          </ModalHeader>
         <ModalBody>
           <div className='form-group mb-3'>
             <Row>
@@ -121,6 +120,28 @@ const NoteCard = ({ note,get_notes_data,delete_note_data }) => {
           <Button color="success" onClick={updateNote} disabled={noteData.category && noteData.subject && noteData.subject.length <= 25 && noteData.content && noteData.content.length <= 160 ? false : true}>Update</Button>
           <Button color="secondary" onClick={() => {
               setAddNote(false)
+          }}>Close</Button>
+        </ModalFooter>
+      </Modal>
+      <Modal isOpen={deletepopup} backdrop="static" style={{ "color": "black" }}
+      centered
+      >
+        <ModalHeader toggle={() => {
+          setDeletePopup(false)
+        }}>
+          <span style={{"color":"red"}}>
+          Delete Note
+          </span>
+          </ModalHeader>
+        <ModalBody>
+          <div className='form-group'>
+              <b>Are you sure to delete your note!Please Confirm</b>
+          </div>
+        </ModalBody>
+        <ModalFooter>
+          <Button color="danger" onClick={deleteData}>Confirm</Button>
+          <Button color="secondary" onClick={() => {
+               setDeletePopup(false)
           }}>Close</Button>
         </ModalFooter>
       </Modal>

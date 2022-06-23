@@ -22,6 +22,7 @@ body{
 .footer-color{
     background-color: hsl(218, 17%, 62%);
     text-align: center;
+    font-size: 15px;
 }
 
 .card-body{
@@ -52,4 +53,20 @@ body{
 
 .filters{
   padding-left:2% ;
+}
+
+button {
+  background: none;
+  padding: 5px 5px;
+  width: 30%;
+  text-align: center;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+.footer-color:hover{
+  text-decoration: underline;
+  cursor: pointer;
 }

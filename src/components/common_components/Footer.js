@@ -6,8 +6,10 @@ const Footer = () => {
     <Container fluid 
     tag="footer"
     className="footer-color fixed-bottom p-1"
-    >
-      copyright@Gowtham-19.github.com
+   >
+      <b  onClick={() => {
+      window.open("https://github.com/Gowtham-19")
+    }}>copyright@Gowtham-19.github.com</b>
     </Container>
     
   );
