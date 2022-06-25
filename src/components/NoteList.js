@@ -7,6 +7,8 @@ import { Row, Col, Button, Modal,ModalHeader, ModalBody, ModalFooter, Input, Car
 import Skeleton from 'react-loading-skeleton';
 import { ToastContainer, toast } from 'react-toastify';
 import DatePicker from "react-datepicker";
+import Zoom  from 'react-reveal/Zoom';
+import Slide from 'react-reveal/Slide';
 
 const NoteList = () => {
   //declerations part
@@ -17,9 +19,12 @@ const NoteList = () => {
   const [isLoading, setisLoading] = useState(true)
   const [filtertype, setFilterType] = useStateWithCallbackLazy("display_all")
   const note_types = ["personal", "professional", "unimportant"]
+  const note_types_filter = ["Display All","Personal", "Professional", "Unimportant"]
+  const [notes_category_filter,setNotesCategoryFilter] = useState("")
   const date_filters = [
     { "display_name": "Display ALL Notes", "name": "display_all" },
-    { "display_name": "Specific Day", "name": "specific_day" }, { "display_name": "Last 7 Days", "name": "last_week" },
+    { "display_name": "Specific Day", "name": "specific_day" }, 
+    { "display_name": "Last 7 Days", "name": "last_week" },
     { "display_name": "Specific Month", "name": "specific_month" },
     { "display_name": "Specific Year", "name": "specific_year" },
   ]
@@ -80,6 +85,11 @@ const NoteList = () => {
     })
   }
 
+  const setCategoryFilterTypeValue =(event)=> {
+    setNotesCategoryFilter(event.target.value,() => {
+      console.log("value o catgeory filter",notes_category_filter)
+    })
+  }
 
   const setAddNoteValues = (event) => {
     const { name, value } = event.target;
@@ -173,6 +183,15 @@ const NoteList = () => {
   return (
     <div>
       <Row md={12} className="filters">
+        {/* <Col md={2}>
+          <label><b>Select notes category</b></label>
+          <select className='form-control' defaultValue={notes_category_filter} onChange={setCategoryFilterTypeValue} name="notes_category_filter" id="notes_category_filter">
+            <option disabled value="">select category type</option>
+            {note_types_filter.map((category_filter,i) => {
+              return <option key={i} name="categoryfiltertype{i}" id="categoryfiltertype{i}" value={category_filter}>{category_filter}</option>
+            })}
+          </select>
+        </Col> */}
         <Col md={3}>
           <label><b>Select Date Filter:</b></label>
           <select className='form-control' defaultValue={filtertype} onChange={setFilterTypeValue} name="filtertype" id="filtertype">
@@ -285,13 +304,25 @@ const NoteList = () => {
       {!isLoading ? (
         <>
           <div className='d-flex flex-row card-list'>
+          <Zoom top>
             <Row>
-              {notes.map((note, i) =>
-                <Col key={i} >
-                  <NoteCard note={note} get_notes_data={get_notes_data} delete_note_data={delete_note_data} />
-                </Col>
+              {notes.length>0 ?(
+                 <>
+                 {notes.map((note, i) =>
+                   <Col key={i} >
+                     <NoteCard note={note} get_notes_data={get_notes_data} delete_note_data={delete_note_data} />
+                   </Col>
+                 )}
+                 </>
+              ):(
+                <div className='nodatamessage'>
+                  <Slide top>
+                  Oops! No Data Available
+                  </Slide>
+                </div>
               )}
             </Row>
+          </Zoom >
           </div>
         </>
       ) :

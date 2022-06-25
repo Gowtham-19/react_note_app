@@ -4,6 +4,7 @@ import api_settings from "../settings/api_settings";
 import { Card, CardBody, CardHeader, CardFooter, CardTitle, Button,Modal,ModalFooter,ModalHeader,ModalBody,Row,Col,Input } from "reactstrap"
 import { ToastContainer, toast } from 'react-toastify';
 import http from "../interceptor";
+import Slide from 'react-reveal/Slide';
 const NoteCard = ({ note,get_notes_data,delete_note_data }) => {
   const note_types = ["personal", "professional", "unimportant"]
   const [addnote, setAddNote] = useState(false);

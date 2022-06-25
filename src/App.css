@@ -70,3 +70,24 @@ button {
   text-decoration: underline;
   cursor: pointer;
 }
+
+.pagenotfound{
+  margin-top: 20%;
+  font-size:70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+
+}
+
+.message:hover{
+  text-decoration: underline;
+}
+
+.nodatamessage{
+  margin-top: 20%;
+  font-size:30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
