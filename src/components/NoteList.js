@@ -20,7 +20,7 @@ const NoteList = () => {
   const [filtertype, setFilterType] = useStateWithCallbackLazy("display_all")
   const note_types = ["personal", "professional", "unimportant"]
   const note_types_filter = ["Display All","Personal", "Professional", "Unimportant"]
-  const [notes_category_filter,setNotesCategoryFilter] = useState("")
+  const [notes_category_filter,setNotesCategoryFilter] = useStateWithCallbackLazy("Display All")
   const date_filters = [
     { "display_name": "Display ALL Notes", "name": "display_all" },
     { "display_name": "Specific Day", "name": "specific_day" }, 
@@ -34,17 +34,20 @@ const NoteList = () => {
     subject: "",
     content: ""
   })
+  //end of declerations part
 
   //initial page load api call
   useEffect(() => {
     getNotes()
-  }, []);
+  }, [1]);
 
   /**apis part */
   const getNotes = async () => {
     await http.get(api_settings.GET_ALL_NOTES).then(res => {
       res = res["data"] ? res["data"] : []
-      console.log("data came in service", res)
+       //assigning new property for data
+       res["data"].map(data_val => data_val["display_status"] = true)
+      // console.log("data came in service", res["data"])
       setNotes(res["data"])
       setisLoading(false)
     }).catch(err => {
@@ -75,19 +78,45 @@ const NoteList = () => {
 
     })
   }
-
   /**end of apis part */
 
+  /**component event:onchange and onclicks */
   const setFilterTypeValue = (event) => {
     setFilterType(event.target.value, () => {
-      console.log("value of filter type value",filtertype)
+      // console.log("value of filter type value",filtertype)
       setFilter(new Date(),event.target.value)
     })
   }
 
+  const filter_category_notes = (catgeory_type) => {
+    setisLoading(true)
+    let notes_data = JSON.parse(JSON.stringify(notes))
+    if(catgeory_type == "Display All"){
+      notes_data.map(data => data["display_status"] = true)
+      setNotes(notes_data,() => {
+        setisLoading(false)
+      })
+    }else {
+      // console.log('reached else part',catgeory_type)
+      let category = catgeory_type.toLowerCase()
+      notes_data.forEach(element_note => {
+        if(element_note["content_type"] == category){
+          element_note["display_status"] = true
+        }else{
+          element_note["display_status"]=false
+        }
+      })
+      setNotes(notes_data,() => {
+        setisLoading(false)
+      })
+      // console.log("data pf notes data",notes)
+    }
+  }
+
   const setCategoryFilterTypeValue =(event)=> {
     setNotesCategoryFilter(event.target.value,() => {
-      console.log("value o catgeory filter",notes_category_filter)
+      // console.log("value o catgeory filter",event.target.value)
+      filter_category_notes(event.target.value)
     })
   }
 
@@ -125,7 +154,7 @@ const NoteList = () => {
     }else{
       filter_type_val = filtertype
     }
-    console.log("value of filter type all",filter_type_val)
+    // console.log("value of filter type all",filter_type_val)
     setFilterDate(date, () => {
       let body={
         // filter_type
@@ -161,38 +190,53 @@ const NoteList = () => {
       ...body
       }).then(res => {
         let data = res["data"]
-        console.log("data of filtered results",data)
+        // console.log("data of filtered results",data)
+        // console.log("value ogf notes types filter",note_types_filter)
         if(data["data"] && data["data"].length>0){
+          let data_notes = data["data"]
+          //assigning new property for data
+          if(notes_category_filter == "Display All"){
+            data_notes.map(data_val => data_val["display_status"] = true)
+          }else{
+            let category = notes_category_filter.toLowerCase()
+            data_notes.forEach(ele_note => {
+              if(ele_note["content_type"] == category){
+                ele_note["display_status"] = true;
+              }else{
+                ele_note['display_status'] = false;
+              }
+            })
+          }
           setNotes(data["data"],() => {
-            console.log("filter date is update",notes)
+            // console.log("filter date is update",notes)
             setisLoading(false)
           })
         }else{
           setNotes([],() => {
-            console.log("filter date is update")
+            // console.log("filter date is update")
             setisLoading(false)
           })
         }
       })
       // console.log("value of filtertype",filtertype)
-      console.log("value of date selected:", body)
+      // console.log("value of date selected:", body)
     })
   }
-
+  /**end of component events */
  
   return (
     <div>
       <Row md={12} className="filters">
-        {/* <Col md={2}>
+        <Col md={4}>
           <label><b>Select notes category</b></label>
-          <select className='form-control' defaultValue={notes_category_filter} onChange={setCategoryFilterTypeValue} name="notes_category_filter" id="notes_category_filter">
-            <option disabled value="">select category type</option>
+          <select className='form-control' defaultValue={notes_category_filter} onChange={setCategoryFilterTypeValue} name="notes_category_filter" id="notes_category_filter" disabled={isLoading}>
+            {/* <option disabled value="">select category type</option> */}
             {note_types_filter.map((category_filter,i) => {
               return <option key={i} name="categoryfiltertype{i}" id="categoryfiltertype{i}" value={category_filter}>{category_filter}</option>
             })}
           </select>
-        </Col> */}
-        <Col md={3}>
+        </Col>
+        <Col md={4}>
           <label><b>Select Date Filter:</b></label>
           <select className='form-control' defaultValue={filtertype} onChange={setFilterTypeValue} name="filtertype" id="filtertype">
             <option disabled value="DEFAULT">select filter type</option>
@@ -246,8 +290,10 @@ const NoteList = () => {
             )
           }
         </Col>
-        <Col md={4}>
-          <Button className='btn btn-success mt-2' onClick={() => {
+      </Row>
+      <Row md={12} className="filters">
+        <Col md={7}>
+          <Button className='btn btn-success mt-2 filters-add' onClick={() => {
             setAddNote(true)
           }} >Add New Note</Button>
         </Col>
@@ -309,9 +355,13 @@ const NoteList = () => {
               {notes.length>0 ?(
                  <>
                  {notes.map((note, i) =>
-                   <Col key={i} >
-                     <NoteCard note={note} get_notes_data={get_notes_data} delete_note_data={delete_note_data} />
-                   </Col>
+                  {
+                    if(note["display_status"]){
+                      return <Col key={i} >
+                            <NoteCard note={note} get_notes_data={get_notes_data} delete_note_data={delete_note_data} />
+                        </Col>
+                    }
+                  }
                  )}
                  </>
               ):(
