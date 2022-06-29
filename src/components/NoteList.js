@@ -73,6 +73,7 @@ const NoteList = () => {
 
   const deleteNote = async (id) => {
     await http.get(api_settings.DELETE_NOTE + "/" + id).then(res => {
+      toast("Note is Deleted", { type: 'warning' })
       get_notes_data()
     }).catch(err => {
 
@@ -217,6 +218,8 @@ const NoteList = () => {
             setisLoading(false)
           })
         }
+      }).catch(err => {
+        setisLoading(false)
       })
       // console.log("value of filtertype",filtertype)
       // console.log("value of date selected:", body)
@@ -331,11 +334,11 @@ const NoteList = () => {
             )}
           </div>
           <div className='form-group'>
-            <label><b>Description(allowed only 160 characters)</b></label>
+            <label><b>Description(allowed only 150 characters)</b></label>
             <Input type="textarea" rows="7" name="content" id="content" placeholder='you can write in detail about your note'
               onChange={setAddNoteValues} value={noteData.content} autoComplete="off" className='form-control' />
-            <span style={{ "float": "right" }}> <span style={noteData.content && noteData.content.length <= 160 ? { "color": "green" } : { "color": "red" }}>{noteData.content?noteData.content.length:0}</span>/<b>160</b></span>
-            {noteData.content && noteData.content.length > 160 ? (
+            <span style={{ "float": "right" }}> <span style={noteData.content && noteData.content.length <= 150 ? { "color": "green" } : { "color": "red" }}>{noteData.content?noteData.content.length:0}</span>/<b>150</b></span>
+            {noteData.content && noteData.content.length > 150 ? (
               <span className='text-danger'>Maximum characters limit is excceded</span>
             ) : (
               <></>
@@ -343,7 +346,7 @@ const NoteList = () => {
           </div>
         </ModalBody>
         <ModalFooter>
-          <Button color="success" onClick={addNote} disabled={noteData.category && noteData.subject && noteData.subject.length <= 25 && noteData.content && noteData.content.length <= 160 ? false : true}>Submit</Button>
+          <Button color="success" onClick={addNote} disabled={noteData.category && noteData.subject && noteData.subject.length <= 25 && noteData.content && noteData.content.length <= 150 ? false : true}>Submit</Button>
           <Button color="secondary" onClick={resetForm}>Close</Button>
         </ModalFooter>
       </Modal>
@@ -360,6 +363,8 @@ const NoteList = () => {
                       return <Col key={i} >
                             <NoteCard note={note} get_notes_data={get_notes_data} delete_note_data={delete_note_data} />
                         </Col>
+                    }else{
+                      return<></>
                     }
                   }
                  )}

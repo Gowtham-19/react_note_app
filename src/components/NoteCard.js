@@ -4,7 +4,6 @@ import api_settings from "../settings/api_settings";
 import { Card, CardBody, CardHeader, CardFooter, CardTitle, Button,Modal,ModalFooter,ModalHeader,ModalBody,Row,Col,Input } from "reactstrap"
 import { ToastContainer, toast } from 'react-toastify';
 import http from "../interceptor";
-import Slide from 'react-reveal/Slide';
 const NoteCard = ({ note,get_notes_data,delete_note_data }) => {
   const note_types = ["personal", "professional", "unimportant"]
   const [addnote, setAddNote] = useState(false);
@@ -15,7 +14,6 @@ const NoteCard = ({ note,get_notes_data,delete_note_data }) => {
     subject: "",
     content: ""
   })
-  
   const updateNote = async (event) => {
     event.preventDefault()
     await http.put(api_settings.UPDATE_NOTE, { 
@@ -24,7 +22,7 @@ const NoteCard = ({ note,get_notes_data,delete_note_data }) => {
       "content_type": noteData.category,
       "description": noteData.content}).then(res => {
       console.log("data inserted")
-      toast("Note is Updated",{type:'success'})
+      toast("Note is Updated",{type:'info'})
       setAddNote(false)
       get_notes_data()
     })
@@ -32,7 +30,8 @@ const NoteCard = ({ note,get_notes_data,delete_note_data }) => {
   }
 
   const deleteData = () => {
-    console.log("delete called")
+    // console.log("delete called")
+    setDeletePopup(false)
     delete_note_data(note._id)
   }
 
@@ -64,7 +63,7 @@ const NoteCard = ({ note,get_notes_data,delete_note_data }) => {
       <CardBody>
         <CardTitle><b>subject</b>:{note.subject}</CardTitle>
         {/* <CardText><b>about: </b>{note.description}</CardText> */}
-        <p className="card-text d-inline-block">
+        <p style={{paddingRight:"1px"}}>
           {note.description}
         </p>
       </CardBody>
@@ -73,7 +72,7 @@ const NoteCard = ({ note,get_notes_data,delete_note_data }) => {
         <Button color='danger' onClick={() => {setDeletePopup(true)}}>Delete</Button>
       </CardFooter>
     </Card>
-    <ToastContainer position='top-center' theme="colored"/>
+    {/* <ToastContainer position='top-right' theme="colored" limit={1}/> */}
       <Modal isOpen={addnote} backdrop="static" style={{ "color": "black" }}>
         <ModalHeader toggle={() => {
           setAddNote(false)
@@ -106,11 +105,11 @@ const NoteCard = ({ note,get_notes_data,delete_note_data }) => {
             )}
           </div>
           <div className='form-group'>
-            <label><b>Description(allowed only 160 characters)</b></label>
+            <label><b>Description(allowed only 150 characters)</b></label>
             <Input type="textarea" rows="7" name="content" id="content" placeholder='you can write in detail about your note'
               onChange={setAddNoteValues} value={noteData.content} autoComplete="off" className='form-control' />
-            <span style={{ "float": "right" }}> <span style={noteData.content.length <= 160 ? { "color": "green" } : { "color": "red" }}>{noteData.content.length}</span>/<b>160</b></span>
-            {noteData.content.length > 160 ? (
+            <span style={{ "float": "right" }}> <span style={noteData.content.length <= 150 ? { "color": "green" } : { "color": "red" }}>{noteData.content.length}</span>/<b>150</b></span>
+            {noteData.content.length > 150 ? (
               <span className='text-danger'>Maximum characters limit is excceded</span>
             ) : (
               <></>

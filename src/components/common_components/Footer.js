@@ -5,7 +5,7 @@ const Footer = () => {
   return (
     <Container fluid 
     tag="footer"
-    className="footer-color fixed-bottom p-1"
+    className="footer-color fixed-bottom p-0"
    >
       <b  onClick={() => {
       window.open("https://github.com/Gowtham-19")
