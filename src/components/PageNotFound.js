@@ -1,13 +1,13 @@
 import React from 'react'
 import { Button } from "reactstrap"
 import {useNavigate} from "react-router-dom"
-import Rotate from 'react-reveal/Rotate';
+import {Flip} from "react-awesome-reveal";;
 
 const PageNotFound = () => {
     const navigate = useNavigate();
     return (
         <>
-        <Rotate left>
+        <Flip>
         <div className='pagenotfound'>
                 404:
             Oops! Page Not Found
@@ -18,7 +18,7 @@ const PageNotFound = () => {
             navigate("/")            
         }}>Go Home</Button>
         </div>
-        </Rotate >
+        </Flip >
         </>
     )
 }

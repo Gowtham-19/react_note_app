@@ -7,8 +7,8 @@ import { Row, Col, Button, Modal,ModalHeader, ModalBody, ModalFooter, Input, Car
 import Skeleton from 'react-loading-skeleton';
 import { ToastContainer, toast } from 'react-toastify';
 import DatePicker from "react-datepicker";
-import Zoom  from 'react-reveal/Zoom';
-import Slide from 'react-reveal/Slide';
+import { Zoom } from "react-awesome-reveal";
+import {Slide} from "react-awesome-reveal";
 
 const NoteList = () => {
   //declerations part
@@ -353,7 +353,7 @@ const NoteList = () => {
       {!isLoading ? (
         <>
           <div className='d-flex flex-row card-list'>
-          <Zoom top>
+          <Zoom>
             <Row>
               {notes.length>0 ?(
                  <>
@@ -371,7 +371,7 @@ const NoteList = () => {
                  </>
               ):(
                 <div className='nodatamessage'>
-                  <Slide top>
+                  <Slide>
                   Oops! No Data Available
                   </Slide>
                 </div>
