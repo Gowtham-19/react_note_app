@@ -190,11 +190,11 @@ const NoteList = () => {
       http.post(api_settings.FILTER_NOTE, {
       ...body
       }).then(res => {
-        let data = res["data"]
-        // console.log("data of filtered results",data)
+        let data = res["data"]?res["data"]["data"]:[]
+        console.log("data of filtered results",data)
         // console.log("value ogf notes types filter",note_types_filter)
-        if(data["data"] && data["data"].length>0){
-          let data_notes = data["data"]
+        if(data && data.length>0){
+          let data_notes = data
           //assigning new property for data
           if(notes_category_filter == "Display All"){
             data_notes.map(data_val => data_val["display_status"] = true)
@@ -208,14 +208,15 @@ const NoteList = () => {
               }
             })
           }
-          setNotes(data["data"],() => {
+          setNotes(data,() => {
             // console.log("filter date is update",notes)
             setisLoading(false)
           })
         }else{
+          console.log("reached zero result point")
+          setisLoading(false)
           setNotes([],() => {
             // console.log("filter date is update")
-            setisLoading(false)
           })
         }
       }).catch(err => {
@@ -364,7 +365,7 @@ const NoteList = () => {
                             <NoteCard note={note} get_notes_data={get_notes_data} delete_note_data={delete_note_data} />
                         </Col>
                     }else{
-                      return<></>
+                      return<div key={i}></div>
                     }
                   }
                  )}
