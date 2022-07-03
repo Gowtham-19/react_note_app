@@ -39,7 +39,7 @@ const NoteList = () => {
   //initial page load api call
   useEffect(() => {
     getNotes()
-  }, [1]);
+  }, []);
 
   /**apis part */
   const getNotes = async () => {
@@ -92,7 +92,7 @@ const NoteList = () => {
   const filter_category_notes = (catgeory_type) => {
     setisLoading(true)
     let notes_data = JSON.parse(JSON.stringify(notes))
-    if(catgeory_type == "Display All"){
+    if(catgeory_type === "Display All"){
       notes_data.map(data => data["display_status"] = true)
       setNotes(notes_data,() => {
         setisLoading(false)
@@ -101,7 +101,7 @@ const NoteList = () => {
       // console.log('reached else part',catgeory_type)
       let category = catgeory_type.toLowerCase()
       notes_data.forEach(element_note => {
-        if(element_note["content_type"] == category){
+        if(element_note["content_type"] === category){
           element_note["display_status"] = true
         }else{
           element_note["display_status"]=false
@@ -190,40 +190,35 @@ const NoteList = () => {
       http.post(api_settings.FILTER_NOTE, {
       ...body
       }).then(res => {
+        setisLoading(false)
         let data = res["data"]?res["data"]["data"]:[]
         console.log("data of filtered results",data)
         // console.log("value ogf notes types filter",note_types_filter)
-        if(data && data.length>0){
+        if(data.length === 0 || Object.keys(data).length === 0){
+          console.log("condition worked")
+          setNotes([{}])
+        }
+        else{
           let data_notes = data
           //assigning new property for data
-          if(notes_category_filter == "Display All"){
+          if(notes_category_filter === "Display All"){
             data_notes.map(data_val => data_val["display_status"] = true)
           }else{
             let category = notes_category_filter.toLowerCase()
             data_notes.forEach(ele_note => {
-              if(ele_note["content_type"] == category){
+              if(ele_note["content_type"] === category){
                 ele_note["display_status"] = true;
               }else{
                 ele_note['display_status'] = false;
               }
             })
           }
-          setNotes(data,() => {
-            // console.log("filter date is update",notes)
-            setisLoading(false)
-          })
-        }else{
-          console.log("reached zero result point")
-          setisLoading(false)
-          setNotes([],() => {
-            // console.log("filter date is update")
-          })
+          setNotes(data)
         }
+        
       }).catch(err => {
         setisLoading(false)
       })
-      // console.log("value of filtertype",filtertype)
-      // console.log("value of date selected:", body)
     })
   }
   /**end of component events */
