@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useStateWithCallbackLazy } from 'use-state-with-callback';
 import api_settings from "../settings/api_settings";
 import { Card, CardBody, CardHeader, CardFooter, CardTitle, Button,Modal,ModalFooter,ModalHeader,ModalBody,Row,Col,Input } from "reactstrap"
-import { ToastContainer, toast } from 'react-toastify';
+import {  toast } from 'react-toastify';
 import http from "../interceptor";
 const NoteCard = ({ note,get_notes_data,delete_note_data }) => {
   const note_types = ["personal", "professional", "unimportant"]
